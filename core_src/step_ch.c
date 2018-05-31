@@ -111,9 +111,10 @@ double advance(double pi[][N2 + 2*NG][NPR],
 	diag_flux(F1, F2);
 
 	fprintf(stderr, "1");
-#pragma omp parallel \
- shared ( pi, pb, pf, F1, F2, ggeom, pflag, dx, Dt ) \
- private ( i, j, k, dU, q, U )
+#pragma acc data copy(pi, pb, pf, pflag) copyin(F1, F2, ggeom, U, dU)  
+// #pragma omp parallel \
+//  shared ( pi, pb, pf, F1, F2, ggeom, pflag, dx, Dt ) \
+//  private ( i, j, k, dU, q, U )
 {
 #pragma omp for
 	/** now update pi to pf **/
