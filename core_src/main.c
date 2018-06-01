@@ -65,11 +65,13 @@ int main(int argc, char *argv[])
 		init_rng(1) ;	/* standard seed for reproducibility */
 		init();
 
-		// copy metric to device
-		#pragma acc enter data copyin(ggeom[0:N1+2*NG][0:N2+2*NG][0:NPG], conn[0:N1+2*NG][0:N2+2*NG][0:NDIM][0:NDIM][0:NDIM])
-
 		if(NPTOT > 0) init_particles();
 	}
+
+	// copy metric to device
+	//#pragma acc enter data copyin(ggeom[0:N1+2*NG][0:N2+2*NG][0:NPG], conn[0:N1+2*NG][0:N2+2*NG][0:NDIM][0:NDIM][0:NDIM])	
+	#pragma acc create(ggeom[0:N1+2*NG][0:N2+2*NG][0:NPG], conn[0:N1+2*NG][0:N2+2*NG][0:NDIM][0:NDIM][0:NDIM])	
+	#pragma acc update device(ggeom, conn) 
 
 	/* emit initial diagnostics */
 	diag_log();
@@ -142,7 +144,7 @@ int main(int argc, char *argv[])
 	diag_image();
 	if(NPTOT > 0) diag_pdump();
 
-	#pragma acc exit data delete(ggeom, conn)
+	//#pragma acc exit data delete(ggeom, conn)
 
 
 	/* done! */

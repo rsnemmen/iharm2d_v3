@@ -8,7 +8,7 @@
    --  calculate fluxes in direction dir, 
         
 */
-
+#pragma acc routine seq
 void primtoflux(double *pr, struct of_state *q, int dir,
 		struct of_geom *geom, double *flux)
 {
@@ -38,6 +38,7 @@ void primtoflux(double *pr, struct of_state *q, int dir,
 
 /* calculate "conserved" quantities; provided strictly for
  * historical reasons */
+#pragma acc routine seq
 void primtoU(double *pr, struct of_state *q, struct of_geom *geom,
 	     double *U)
 {
@@ -62,6 +63,7 @@ void bcon_calc(double *pr, double *ucon, double *ucov, double *bcon)
 /* notice that factor of sqrt(4 pi) is absorbed into defn of b, which
    implies that it must be reinserted to get B in Gauss -- this
    is origin of the 4 pi in Bunit = c sqrt[4 Pi rhounit] */
+#pragma acc routine seq
 void mhd_calc(double *pr, int dir, struct of_state *q, double *mhd)
 {
 	int j;
@@ -83,6 +85,7 @@ void mhd_calc(double *pr, int dir, struct of_state *q, double *mhd)
 }
 
 /* add in source terms to equations of motion */
+#pragma acc routine seq
 void source(double *ph, struct of_geom *geom, int ii, int jj, double *dU,
 	    double Dt)
 {
@@ -125,6 +128,7 @@ double bsq_calc(double *pr, struct of_geom *geom)
 }
 
 /* find ucon, ucov, bcon, bcov from primitive variables */
+#pragma acc routine seq
 void get_state(double *pr, struct of_geom *geom, struct of_state *q)
 {
 
