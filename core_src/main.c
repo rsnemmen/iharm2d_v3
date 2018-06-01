@@ -64,6 +64,10 @@ int main(int argc, char *argv[])
 	if (!restart_init()) {
 		init_rng(1) ;	/* standard seed for reproducibility */
 		init();
+
+		// copy metric to device
+		#pragma acc enter data copyin(ggeom[0:N1+2*NG][0:N2+2*NG][0:NPG])
+
 		if(NPTOT > 0) init_particles();
 	}
 
@@ -137,6 +141,9 @@ int main(int argc, char *argv[])
 	diag_dump();
 	diag_image();
 	if(NPTOT > 0) diag_pdump();
+
+	#pragma acc exit data delete(ggeom)
+
 
 	/* done! */
 	return (0);

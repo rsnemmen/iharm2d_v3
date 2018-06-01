@@ -111,18 +111,21 @@ double advance(double pi[][N2 + 2*NG][NPR],
 	diag_flux(F1, F2);
 
 	fprintf(stderr, "1");
-#pragma acc data copy(pi, pb, pf, pflag) copyin(F1, F2, ggeom, U, dU)  
+
+	#pragma acc data copy(pi[0:N1+2*NG][0:N2+2*NG][0:NPR], pb[0:N1+2*NG][0:N2+2*NG][0:NPR], pf[0:N1+2*NG][0:N2+2*NG][0:NPR], pflag[0:N1+2*NG][0:N2+2*NG]) copyin(F1[0:N1+2*NG][0:N2+2*NG][0:NPR], F2[0:N1+2*NG][0:N2+2*NG][0:NPR], U[0:NPR], dU[0:NPR], q)   
 // #pragma omp parallel \
 //  shared ( pi, pb, pf, F1, F2, ggeom, pflag, dx, Dt ) \
 //  private ( i, j, k, dU, q, U )
-{
-#pragma omp for
+	{
+	#pragma acc kernels present(ggeom)
+	{
+//#pragma omp for
 	/** now update pi to pf **/
 	ZLOOP {
 
-		source(pb[i][j], &(ggeom[i][j][CENT]), i, j, dU, Dt);
-		get_state(pi[i][j], &(ggeom[i][j][CENT]), &q);
-		primtoU(pi[i][j], &q, &(ggeom[i][j][CENT]), U);
+		source(pb[i][j], &(ggeom[i][j][CENT]), i, j, dU, Dt); // dU modified
+		get_state(pi[i][j], &(ggeom[i][j][CENT]), &q); // q modified
+		primtoU(pi[i][j], &q, &(ggeom[i][j][CENT]), U); // U modified
 
 		PLOOP {
 			U[k] +=
@@ -132,9 +135,10 @@ double advance(double pi[][N2 + 2*NG][NPR],
 			    );
 		}
 
-		pflag[i][j] = Utoprim(U, &(ggeom[i][j][CENT]), pf[i][j]);
+		pflag[i][j] = Utoprim(U, &(ggeom[i][j][CENT]), pf[i][j]); // pf modified
 	}
-}
+	} // end acc kernels
+	} // end acc data
 
 	ndt = 1. / (1. / ndt1 + 1. / ndt2);
 	//fprintf(stderr,"\nndt: %g %g %g\n",ndt,ndt1,ndt2) ;

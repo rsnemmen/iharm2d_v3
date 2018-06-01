@@ -98,7 +98,7 @@ extern double Jcon[N1+2*NG][N2+2*NG][NDIM];
 
 /* particle-related global variables */
 #define NPTOT	0
-extern double xp[NPTOT][NDIM];
+extern double xp[NPTOT+1][NDIM];
 
 /* fluid physics parameters */
 extern double gam;

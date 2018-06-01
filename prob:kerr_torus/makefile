@@ -3,8 +3,8 @@
 #
 CORE_SRC_DIR = ../core_src
 #
-CC      = gcc
-CFLAGS  = -Wall -Ofast -fopenmp -I./
+CC      = pgcc
+CFLAGS  = -acc -Minfo=accel -I./
 LDFLAGS = -lm -lgsl -lgslcblas
 EXE     = harm
 
