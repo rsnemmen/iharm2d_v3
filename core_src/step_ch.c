@@ -112,6 +112,11 @@ double advance(double pi[][N2 + 2*NG][NPR],
 
 	fprintf(stderr, "1");
 
+	#pragma acc routine(source) seq
+	#pragma acc routine(get_state) seq
+	#pragma acc routine(primtoU) seq
+	#pragma acc routine(Utoprim) seq
+
 	#pragma acc data copy(pi[0:N1+2*NG][0:N2+2*NG][0:NPR], pb[0:N1+2*NG][0:N2+2*NG][0:NPR], pf[0:N1+2*NG][0:N2+2*NG][0:NPR], pflag[0:N1+2*NG][0:N2+2*NG]) copyin(F1[0:N1+2*NG][0:N2+2*NG][0:NPR], F2[0:N1+2*NG][0:N2+2*NG][0:NPR], U[0:NPR], dU[0:NPR], q)   
 // #pragma omp parallel \
 //  shared ( pi, pb, pf, F1, F2, ggeom, pflag, dx, Dt ) \

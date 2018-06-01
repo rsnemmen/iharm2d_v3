@@ -17,7 +17,7 @@ double conn[N1 + 2*NG][N2 + 2*NG][NDIM][NDIM][NDIM];
 struct of_geom ggeom[N1+2*NG][N2+2*NG][NPG] ;
 
 /* particles */
-double xp[NPTOT][NDIM];
+double xp[NPTOT+1][NDIM];
 
 /*************************************************************************
     GLOBAL VARIABLES SECTION 
